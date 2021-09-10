@@ -1,0 +1,28 @@
+-- Controller information --
+-- ID | H/W Model         | RAM    | Temp | BBU    | Firmware     
+c0    | LSI 3108 MegaRAID | 2048MB | 68C  | Absent | FW: 24.7.0-0026 
+
+-- Array information --
+-- ID | Type   |    Size |  Strpsz | Flags | DskCache |   Status |  OS Path | CacheCade |InProgress   
+c0u0  | RAID-1 |    111G |  256 KB | RA,WT |  Default |  Optimal |        0 | None      |None         
+c0u1  | RAID-6 |   2180G |  256 KB | RA,WT | Disabled |  Optimal |        1 | None      |None         
+
+-- Disk information --
+-- ID  | Type | Drive Model                                      | Size     | Status          | Speed    | Temp | Slot ID  | LSI Device ID
+c0u0p0 | SSD  | 50026B725502806D KINGSTON KW-S34120-4W1 603ABBF0 | 111.2 Gb | Online, Spun Up | 6.0Gb/s  | 20C  | [0:0]    | 6       
+c0u0p1 | SSD  | 50026B725502806F KINGSTON KW-S34120-4W1 603ABBF0 | 111.2 Gb | Online, Spun Up | 6.0Gb/s  | 19C  | [0:1]    | 13      
+c0u1p0 | HDD  | SEAGATE ST3600057SS 00063SL15X2K                 | 558.4 Gb | Online, Spun Up | 6.0Gb/s  | 38C  | [0:13]   | 54      
+c0u1p1 | HDD  | SEAGATE ST3600057SS 000B6SLAKBQP                 | 558.4 Gb | Online, Spun Up | 6.0Gb/s  | 35C  | [0:15]   | 34      
+c0u1p2 | HDD  | SEAGATE ST3600057SS 000B6SL84N53                 | 558.4 Gb | Online, Spun Up | 6.0Gb/s  | 35C  | [0:8]    | 76      
+c0u1p3 | HDD  | SEAGATE ST3600057SS 00063SL1PQV5                 | 558.4 Gb | Online, Spun Up | 6.0Gb/s  | 37C  | [0:19]   | 57      
+c0u1p4 | HDD  | SEAGATE ST3600057SS 00086SL4P7WX                 | 558.4 Gb | Online, Spun Up | 6.0Gb/s  | 33C  | [0:16]   | 73      
+c0u1p5 | HDD  | SEAGATE ST3600057SS 00086SL6Z9P7                 | 558.4 Gb | Online, Spun Up | 6.0Gb/s  | 36C  | [0:22]   | 78      
+
+-- Unconfigured Disk information --
+-- ID   | Type | Drive Model                      | Size     | Status                | Speed    | Temp | Slot ID  | LSI Device ID
+c0uXpY  | HDD  | SEAGATE ST3600057SS 000B6SL84N7D | 558.4 Gb | Hotspare, Spun down   | 6.0Gb/s  | 45C  | [0:6]    | Unknown 
+c0uXpY  | HDD  | SEAGATE ST3600057SS 000B6SL32M7B | 558.4 Gb | Hotspare, Spun down   | 6.0Gb/s  | 48C  | [0:7]    | Unknown 
+c0uXpY  | HDD  | SEAGATE ST3600057SS 00086SL6Y99M | 558.4 Gb | Unconfigured(bad)     | 6.0Gb/s  | 27C  | [0:11]   | Unknown 
+c0uXpY  | HDD  | SEAGATE ST3600057SS 00086SL4PG78 | 558.4 Gb | Unconfigured(bad)     | 6.0Gb/s  | 32C  | [0:23]   | Unknown 
+
+
