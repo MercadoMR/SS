@@ -1,0 +1,47 @@
+Bootstrap: library
+From: alpine:latest
+
+%setup
+    # ESTOS COMANDO SE EJECUTAN EN EL HOST
+    cd ~
+    CURRENT_DIR=$(pwd)
+    mkdir -p $CURRENT_DIR/containerfs
+    #source ~/.bashrc
+
+%environment
+    export PORT_NETDATA=20219
+    #source ~/.bashrc
+    #unset SINGULARITY_BIND
+
+%post
+    apk update && apk add bash curl
+    apk add net-snmp net-snmp-tools busybox-extras openssl
+    apk add nodejs python3 lm-sensors iproute2
+    # INSTALACION DE NETDATA MANUAL
+    curl -Ss 'https://raw.githubusercontent.com/netdata/netdata/master/packaging/installer/install-required-packages.sh' >/tmp/install-required-packages.sh && bash /tmp/install-required-packages.sh -i netdata --non-interactive
+    git clone https://github.com/netdata/netdata.git --depth=100 --recursive
+    cd netdata
+    ./netdata-installer.sh --dont-wait --stable-channel --disable-telemetry --dont-start-it
+    # INSTALACION DE NETDATA AUTOMATICA
+    #bash <(curl -Ss https://my-netdata.io/kickstart.sh) --dont-wait --stable-channel --disable-telemetry --dont-start-it
+    NOW=`date`
+    echo "export NOW=\"${NOW}\"" >> $SINGULARITY_ENVIRONMENT
+
+%runscript
+    echo "El contenedor ha sido creado el $NOW"
+    echo "El contenedor se ejecuta $(date)."
+    echo "Arguments received: $*"
+    netdata
+
+%test
+    ls /etc/
+
+%labels
+    Author MIMR
+    Version v0.0.1
+
+%help
+    This is a demo container used to illustrate a def file that uses all
+    supported sections.
+
+
