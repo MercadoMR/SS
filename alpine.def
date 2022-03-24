@@ -3,13 +3,20 @@ From: alpine:3.15
 
 %setup
     # ESTOS COMANDO SE EJECUTAN EN EL HOST
-    cd ~
     CURRENT_DIR=$(pwd)
-    mkdir -p $CURRENT_DIR/containerfs2
-    ##source ~/.bashrc
+    if ! [ -e configs.env ]; then
+       echo "El archivo configs.env no existe, no se creará el contenedor."
+       echo "Saliendo..."
+       exit -1
+    fi
+    set -a
+    source configs.env
+    set +a
+    mkdir -p ${CURRENT_DIR}/${CONTAINER_FOLDER}    
     
 %environment
-    export PORT_NETDATA=20219
+    export OPENTSDB_PORT=4242
+    export RETENTION_PERIOD=12
     #unset SINGULARITY_BIND
 
 %post
@@ -49,20 +56,25 @@ EOF
     # (Opcion 2) PONER EL ARCHIVO EN LOCAL AL INICIO sea con %files o en %SETUP
     # Suponiendo que el archivo ya está en local solamente cargar las variables desde ahí.
 
-    # CARGAR LAS VARIABLES DE ENTORNO PARA OPCION 1 Y 2
-    #set -a
-    #source configs.env
-    #set +a
+    # CARGAR LAS VARIABLES DE ENTORNO PARA OPCION 1 Y 2   
 
     # (Opcion 3) PONER LAS VARIABLES POR DEFECTO EN EL ARCHIVO .DEF
 
     ## SUSTITUCIÓN DE VARIABLES EN TODOS LOS ARCHIVOS 
+
+    # 1.- netdata.conf - Agregar configuraciones de netdata 
+    # wget https://raw.githubusercontent.com/MercadoMR/SS/main/configs/netdata.conf --output-document=./netdata.conf
+    # test -d /etc/netdata/ || mkdir -p /etc/netdata/
+    # (envsubst < netdata.conf) > /etc/netdata/netdata.conf
+    
+    # 2.- snmp.conf - Agregar configuración del sensor 
+    # wget https://raw.githubusercontent.com/MercadoMR/SS/main/configs/snmp.conf --output-document=./snmp.conf
     # test -d /etc/netdata/node.d/ || mkdir -p /etc/netdata/node.d/
     # (envsubst < snmp.conf) > /etc/netdata/node.d/snmp.conf
     
-    # AGREGAR CONFIGURACIONES DE SNMP & TSDB
-    #/etc/netdata/edit-config exporting.conf
-    #/etc/netdata/edit-config 
+    # 3.- exporting.conf - Agregar configuración de TSDB
+    # wget https://raw.githubusercontent.com/MercadoMR/SS/main/configs/exporting.conf --output-document=./exporting.conf
+    # (envsubst < exporting.conf) > /etc/netdata/exporting.conf
     
     NOW=`date`
     echo "export NOW=\"${NOW}\"" >> $SINGULARITY_ENVIRONMENT
@@ -71,7 +83,7 @@ EOF
     echo "El contenedor ha sido creado el $NOW"
     echo "Arguments received: $*"
     netdata
-    nohup victoria-metrics -storageDataPath=victoria-metrics-data -dedup.minScrapeInterval=30s -retentionPeriod=12 -opentsdbListenAddr=localhost:4242 1>/dev/null 2>~/containerfs2/victoria.log &
+    nohup victoria-metrics -storageDataPath=$VICTORIA_FOLDER -dedup.minScrapeInterval=30s -retentionPeriod=$RETENTION_PERIOD -opentsdbListenAddr=localhost:$VICTORIA_PORT 1>/dev/null 2>~/victoria.log &
     nohup grafana-server --config /etc/grafana.ini --homepath /usr/share/grafana/ &
     
 %test
